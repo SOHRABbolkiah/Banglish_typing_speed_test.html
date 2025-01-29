@@ -1,0 +1,16 @@
+# Banglish Typing Speed Test
+
+This is a simple Banglish typing speed test web application. Users can test their typing speed and accuracy in Banglish (Bengali written in English letters).
+
+## Features
+- 1-minute and 30-second typing tests.
+- AI chat feature.
+- Custom typing test option (under development).
+
+## How to Use
+1. Clone the repository.
+2. Open `TypingSpeedTest.html` in your browser.
+3. Start typing!
+
+## Contributing
+Feel free to contribute to this project by creating issues or pull requests.
