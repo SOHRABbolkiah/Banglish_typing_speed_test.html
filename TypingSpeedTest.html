@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banglish Typing Speed Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #00b4db, #0083b0);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        #stats {
+            margin-bottom: 20px;
+        }
+
+        #text-display {
+            margin: 20px 0;
+            font-size: 1.5em;
+            color: #fff;
+            line-height: 1.5;
+        }
+
+        #input-area {
+            width: 100%;
+            height: 100px;
+            font-size: 1.2em;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        #result {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        #footer {
+            font-size: 0.8em;
+            color: #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #0083b0;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #00b4db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Banglish Typing Speed Test</h1>
+        <div id="stats">
+            <span>Live WPM: <span id="wpm">0</span></span>
+            <span>Accuracy: <span id="accuracy">100%</span></span>
+        </div>
+        <div id="test-options">
+            <button onclick="startTest(60)">1 Minute Test</button>
+            <button onclick="startTest(30)">30 Second Test</button>
+            <button onclick="startWordPractice()">Word Practice</button>
+        </div>
+        <div id="text-display"></div>
+        <textarea id="input-area" placeholder="Start typing here..." disabled></textarea>
+        <div id="result"></div>
+        <div id="footer">Powered by Sohrab Uddin</div>
+    </div>
+    <script>
+        const textDisplay = document.getElementById('text-display');
+        const inputArea = document.getElementById('input-area');
+        const wpmDisplay = document.getElementById('wpm');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const resultDisplay = document.getElementById('result');
+
+        let startTime, endTime, timer;
+        let currentText = '';
+        let words = ['ami', 'tomi', 'apni', 'bangla', 'english', 'typing', 'speed', 'test'];
+        let story = "ami bangladesh e thaki. ami ekjon student. ami programming shikhte chai. ami onek khusi.";
+
+        function startTest(duration) {
+            inputArea.disabled = false;
+            inputArea.value = '';
+            inputArea.focus();
+            resultDisplay.textContent = '';
+            currentText = story;
+            textDisplay.innerHTML = currentText.split('').map(char => `<span>${char}</span>`).join('');
+            startTime = new Date();
+            if (timer) clearInterval(timer);
+            timer = setInterval(updateStats, 1000);
+            setTimeout(endTest, duration * 1000);
+        }
+
+        function startWordPractice() {
+            inputArea.disabled = false;
+            inputArea.value = '';
+            inputArea.focus();
+            resultDisplay.textContent = '';
+            currentText = words.join(' ');
+            textDisplay.innerHTML = currentText.split('').map(char => `<span>${char}</span>`).join('');
+            startTime = new Date();
+            if (timer) clearInterval(timer);
+            timer = setInterval(updateStats, 1000);
+        }
+
+        function updateStats() {
+            const typedText = inputArea.value;
+            const correctChars = typedText.split('').filter((char, index) => char === currentText[index]).length;
+            const accuracy = (correctChars / typedText.length) * 100 || 100;
+            accuracyDisplay.textContent = `${accuracy.toFixed(2)}%`;
+
+            const timeElapsed = (new Date() - startTime) / 1000 / 60; // in minutes
+            const wpm = (typedText.split(' ').length / timeElapsed) || 0;
+            wpmDisplay.textContent = wpm.toFixed(2);
+
+            updateTextDisplay(typedText);
+        }
+
+        function updateTextDisplay(typedText) {
+            textDisplay.innerHTML = currentText.split('').map((char, index) => {
+                let color = 'white';
+                if (index < typedText.length) {
+                    color = char === typedText[index] ? 'green' : 'red';
+                }
+                return `<span style="color: ${color}">${char}</span>`;
+            }).join('');
+        }
+
+        function endTest() {
+            clearInterval(timer);
+            inputArea.disabled = true;
+            const typedText = inputArea.value;
+            const correctChars = typedText.split('').filter((char, index) => char === currentText[index]).length;
+            const accuracy = (correctChars / typedText.length) * 100 || 100;
+            const timeElapsed = (new Date() - startTime) / 1000 / 60; // in minutes
+            const wpm = (typedText.split(' ').length / timeElapsed) || 0;
+            resultDisplay.textContent = `Test Finished! WPM: ${wpm.toFixed(2)}, Accuracy: ${accuracy.toFixed(2)}%`;
+        }
+
+        // Initialize
+        textDisplay.innerHTML = story.split('').map(char => `<span>${char}</span>`).join('');
+    </script>
+</body>
+</html>
